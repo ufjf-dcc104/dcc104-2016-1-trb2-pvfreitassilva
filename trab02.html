@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>Shooter car</title>
+		<style>
+			body{
+				margin: 20px;
+			}
+		</style>
+		<script src="Sprite.js"></script>
+	</head>
+	<body>
+	<canvas>
+		Seu navegador não tem suporte ao canvas!
+		Atualize seu navegador.
+	</canvas>
+	<script>
+		var canvas = document.getElementsByTagName("canvas")[0];
+		var ctx = canvas.getContext("2d");
+		canvas.width = window.innerWidth-40;
+		canvas.height = window.innerHeight-50;
+
+		var fps = 60;
+		var dt = 1/fps;
+		var mousePos= {x: 0,y: 0};
+
+		var excluir = [];
+		
+		var carro = new Image();
+		carro.src = "img/carro.png";
+		carro.id = "carroImg";
+
+		var inimigoImg = new Image();
+		inimigoImg.src = "img/inimigo.png"
+		inimigoImg.id = "inimigoImg";
+		
+		var canhao = new Image();
+		canhao.src = "img/canhao.png";
+		canhao.id = "canhaoImg";
+		
+		var pc = new Sprite();
+		pc.danificado = 0;
+		pc.col = 0;
+		pc.raio = 60;
+		pc.raioCanhao = 45;
+		pc.animacaoCanhao = 0;
+		pc.animarCanhao = false;
+		pc.y = canvas.height/2 - pc.raio;
+
+		var imgTiros = new Image();
+		imgTiros.src = "img/tiro.png";
+
+		var chao = new Image();
+		chao.src = "img/chao.jpg";
+
+		var inimigos = [];
+
+		function criaInimigo(){
+			var inimigo = new Sprite();
+			inimigo.danificado = 0;
+			inimigo.col = 0;
+			inimigo.raio = 60;
+			inimigo.raioCanhao = 45;
+			inimigo.animacaoCanhao = 0;
+			inimigo.animarCanhao = false;
+			inimigo.y = Math.random()*(canvas.height - 400) + 200 - inimigo.raio; //canvas.height/2;
+			inimigo.x = -500;
+			inimigo.tempoDisparo = 0;
+			inimigo.proximoDispado = Math.random()*1500 + 1500;
+
+			inimigo.desenhar = function(){
+				ctx.save();
+				ctx.translate(this.x,this.y);
+				ctx.rotate(this.vy/1000);
+
+				var linha;
+				if(this.ax<0)
+					linha = 1;
+				else
+					linha = 0;
+
+				ctx.drawImage(inimigoImg, Math.floor(this.col)*128, linha*128, 128, 128,
+						-this.raio, -this.raio, 2*this.raio, 2*this.raio);
+
+				ctx.restore();
+				
+				if(this.col >= 4)
+					this.col = 0;
+				else
+					this.col += 25*dt;
+
+				ctx.save();
+				ctx.translate(this.x,this.y);
+				ctx.rotate(this.rotacao);
+				ctx.translate(15,0);
+
+				if(this.animarCanhao){
+					this.animacaoCanhao+=dt;
+					if(this.animacaoCanhao>0.1){
+						this.animacaoCanhao=0;
+						this.animarCanhao=false;
+					}
+					ctx.drawImage(canhao, 128, 0, 128, 128,
+						-this.raioCanhao, -this.raioCanhao, 2*this.raioCanhao, 2*this.raioCanhao);
+				}
+				else{
+					ctx.drawImage(canhao, 0, 0, 128, 128,
+						-this.raioCanhao, -this.raioCanhao, 2*this.raioCanhao, 2*this.raioCanhao);
+				}
+
+				ctx.restore();
+			}
+
+			inimigo.restricoes = function(){
+
+				if(this.x < 0){
+					this.vx = 300;
+				}
+				else{
+					this.ax = 0;
+					this.tempoDisparo+=1000*dt;
+					if(this.tempoDisparo > this.proximoDispado){
+						console.log(this.tempoDisparo)
+						this.tempoDisparo=0;
+						this.proximoDispado = Math.random()*1500 + 1500;
+						this.atirar();
+					}
+				}
+			}
+
+			inimigo.mover = function(){
+				this.vx = this.vx + this.ax*dt - 0.05*this.vx;;
+				this.x = this.x + this.vx*dt;
+				this.vy = this.vy + this.ay*dt - 0.05*this.vy;
+				this.y = this.y + this.vy*dt;
+
+				this.rotacao = Math.atan((this.y - pc.y)/(this.x - pc.x));
+					if(pc.x < this.x)
+				    	this.rotacao +=Math.PI;
+			}
+
+			return inimigo;
+		}
+
+		inimigos.push(criaInimigo());
+
+		var cenario = new Cenario();
+
+		function Cenario(){
+			this.passo = 0;
+		}
+
+		Cenario.prototype.desenhar = function(){
+			ctx.drawImage(chao, -this.passo, 0);
+			ctx.drawImage(chao, -this.passo+800, 0);
+			ctx.drawImage(chao, -this.passo+1600, 0);
+			this.passo += dt*800;
+			if(this.passo > 800)
+				this.passo = 0;
+		}
+
+		//var tiro = new Sprite();
+		//tiro.y =  -12000;
+		//tiro.raio = 10;
+		//tiro.col = 0;
+		//tiro.rotacao = 0;
+
+		var tiros = [];
+		
+		pc.desenhar=function(){
+
+			ctx.save();
+			ctx.translate(this.x,this.y);
+			ctx.rotate(this.vy/1000);
+
+			var linha;
+			if(this.ax<0)
+				linha = 1;
+			else
+				linha = 0;
+
+			ctx.drawImage(carro, Math.floor(this.col)*128, linha*128, 128, 128,
+					-this.raio, -this.raio, 2*this.raio, 2*this.raio);
+
+			ctx.restore();
+			
+			if(this.col >= 4)
+				this.col = 0;
+			else
+				this.col += 25*dt;
+
+			ctx.save();
+			ctx.translate(this.x,this.y);
+			ctx.rotate(this.rotacao);
+			ctx.translate(15,0);
+
+			if(this.animarCanhao){
+				this.animacaoCanhao+=dt;
+				if(this.animacaoCanhao>0.1){
+					this.animacaoCanhao=0;
+					this.animarCanhao=false;
+				}
+				ctx.drawImage(canhao, 128, 0, 128, 128,
+					-this.raioCanhao, -this.raioCanhao, 2*this.raioCanhao, 2*this.raioCanhao);
+			}
+			else{
+				ctx.drawImage(canhao, 0, 0, 128, 128,
+					-this.raioCanhao, -this.raioCanhao, 2*this.raioCanhao, 2*this.raioCanhao);
+			}
+
+			ctx.restore();
+		};
+
+		function passo(){
+			pc.mover();
+			for (var i in inimigos) {
+				inimigos[i].mover();
+			}
+			for (var i in tiros) {
+				tiros[i].mover();
+			}
+			pc.restricoes();
+			for (var i in inimigos) {
+				inimigos[i].restricoes();
+			}
+			for (var i in tiros) {
+				tiros[i].restricoes();
+			}
+			//Limpar a tela
+ 			ctx.clearRect(0,0, canvas.width, canvas.height);
+			
+			cenario.desenhar();
+			for (var i in tiros) {
+				tiros[i].desenhar();
+			}
+			pc.desenhar();
+
+			for (var i in inimigos) {
+				inimigos[i].desenhar();
+			}
+
+			for(var i in tiros){
+				if(tiros[i].foraDaTela())
+					excluir.push(tiros[i])
+			}
+			for(var i in excluir){
+				tiros.splice(tiros.indexOf(excluir[i]),1);
+			}
+			excluir = [];
+			//for (var i in inimigos) {
+			//	if(pc.danificado<=0 && pc.colidiuComCircular(inimigos[i])){
+			//		pc.danificado = 2;
+			//		inimigos[i].y = 1200;
+			//	}
+			//	if(tiro.colidiuComCircular(inimigos[i])){
+			//		inimigos[i].y = 1200;
+			//		excluir.push(inimigos[i]);
+			//		tiro.y = -1200;
+			//	}
+			//}
+			//for(var e in excluir){
+			//	inimigos.splice(inimigos.indexOf(excluir[e]),1);
+			//}
+			//excluir = [];
+		}
+
+		function teclaPressionada(e){
+			//console.log("Tecla Pressionada: " + e.keyCode);
+			switch(e.keyCode){
+				case 65: //a
+					pc.ax = -1000;
+				break;
+				case 68: //d
+					pc.ax = 1000;
+				break;
+				case 87: //w
+					pc.ay = -1000;
+				break;
+				case 83: //s
+					pc.ay = 1000;
+				break;
+			}
+		}
+		function teclaSolta(e){
+			//console.log("Tecla Solta: " + e.keyCode);
+			switch(e.keyCode){
+				case 65:
+				case 68:
+					pc.ax = 0;
+					break;
+				case 87:
+				case 83:
+					pc.ay = 0;
+				break;
+			}
+		} 
+
+		function atualizaPosicaoMouse(e){
+			var obj = canvas;
+		    var top = 0;
+		    var left = 0;
+		    while (obj && obj.tagName != 'BODY') {
+                    top += obj.offsetTop;
+                    left += obj.offsetLeft;
+                    obj = obj.offsetParent;
+                }
+		  
+		    var mouseX = e.clientX - left + window.pageXOffset;
+		    var mouseY = e.clientY - top + window.pageYOffset;
+		    mousePos = {
+		        x: mouseX,
+		        y: mouseY
+		    };
+		}
+
+		function mousePressionado(e){
+			//console.log("Mouse pressionado");
+			//tiro.x = pc.x;
+			//tiro.y = pc.y;
+			//tiro.vy = 700*Math.sin(pc.rotacao);
+			//tiro.vx = 700*Math.cos(pc.rotacao);
+			//tiro.rotacao=pc.rotacao;
+			//pc.animarCanhao = true;
+			//pc.animacaoCanhao = 0;
+			pc.atirar();
+		}
+		
+		setInterval(passo, 1000/fps);
+		addEventListener("keydown", teclaPressionada);
+		addEventListener("keyup", teclaSolta);
+		addEventListener("mousemove", atualizaPosicaoMouse, false);
+		addEventListener("mousedown", mousePressionado, false);
+
+		
+
+	</script>
+	</body>
+</html>
