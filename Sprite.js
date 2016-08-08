@@ -7,9 +7,22 @@ function Sprite(){
   this.vy = 0;
   this.ay = 0;
   this.rotacao = 0;
+  this.saude = saudeMaxima;
+  this.animaExplosao = tempoExplosao;
+  this.colExplosao = 0;
+  this.linExplosao = 0;
 }
 
-Sprite.prototype.atirar = function(){
+Sprite.prototype.restaurar = function(){
+  if(this.linExplosao >= 4){
+    this.saude = saudeMaxima;
+    this.animaExplosao = tempoExplosao;
+    this.colExplosao = 0;
+    this.linExplosao = 0;
+  }
+}
+
+Sprite.prototype.atirar = function(deInimigo){
       var tiro = new Sprite();
 
       tiro.restricoes = function () {};
@@ -32,7 +45,6 @@ Sprite.prototype.atirar = function(){
 
       tiro.foraDaTela = function(){
         if(this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height){
-          console.log("excluindo tiro");
           return true;
         }
         return false;
@@ -45,6 +57,8 @@ Sprite.prototype.atirar = function(){
       tiro.vy = 700*Math.sin(this.rotacao);
       tiro.vx = 700*Math.cos(this.rotacao);
       tiro.rotacao=this.rotacao;
+      tiro.deInimigo = deInimigo;
+      tiro.forca = 10;
       this.animarCanhao = true;
       this.animacaoCanhao = 0;
 
@@ -64,15 +78,78 @@ Sprite.prototype.mover = function (){
 
 Sprite.prototype.desenhar = function (){
 
-  ctx.fillStyle = this.cor;
-  ctx.strokeStyle = "rgb(150, 50, 50)";
-  ctx.lineWidth = 3;
+    ctx.save();
+    ctx.translate(this.x,this.y);
+    ctx.rotate(this.vy/fatorRotacaoY);
 
-  ctx.beginPath();
-  ctx.arc(this.x, this.y, this.raio, 0, 2*Math.PI);
-  ctx.closePath();
-  ctx.fill();
-  ctx.stroke();
+    var linha;
+    if(this.ax<0)
+      linha = 1;
+    else
+      linha = 0;
+
+    if(this.saude <= 0 && this.linExplosao < 4){
+        ctx.drawImage(explosaoImg, Math.floor(this.colExplosao)*64, this.linExplosao*64, 64, 64,
+        -this.raio, -this.raio, 2*this.raio, 2*this.raio);
+
+        if(this.colExplosao >= 4){
+          this.colExplosao = 0;
+          this.linExplosao++;
+        }
+        else{
+          this.colExplosao += intervaloFrames*dt;
+        }
+    }
+    else{
+
+      if((this.danificado*20%2>=0 && this.danificado*20%2 <= 1.0) || this.danificado<0)
+          ctx.drawImage(this.img, Math.floor(this.col)*128, linha*128, 128, 128,
+            -this.raio, -this.raio, 2*this.raio, 2*this.raio);
+
+        ctx.restore();
+
+        //desenha barra de vida
+        ctx.save();
+        ctx.translate(this.x,this.y);
+
+        var corSaude = "rgb("+ Math.floor(255-this.saude*2.55) +","+Math.floor(this.saude*2.55)+",0)";
+        //console.log(corVida);
+        ctx.strokeStyle = "rgb(0, 0, 0)";
+        ctx.fillStyle = corSaude;
+        ctx.lineWidth = 1;
+        ctx.strokeRect(-this.raio,-this.raio,largBarraSaude,altuBarraSaude);
+        ctx.fillRect(-this.raio,-this.raio,this.saude,altuBarraSaude);
+
+        ctx.restore();
+
+        if(this.col >= 4)
+          this.col = 0;
+        else
+          this.col += intervaloFrames*dt;
+
+        ctx.save();
+        ctx.translate(this.x,this.y);
+        ctx.rotate(this.rotacao);
+        ctx.translate(15,0);
+
+        if((this.danificado*20%2>=0 && this.danificado*20%2 <= 1.0) || this.danificado<0){
+          if(this.animarCanhao){
+            this.animacaoCanhao+=dt;
+            if(this.animacaoCanhao>tempoAnimacaoCanhao){
+              this.animacaoCanhao=0;
+              this.animarCanhao=false;
+            }
+            ctx.drawImage(canhao, 128, 0, 128, 128,
+              -this.raioCanhao, -this.raioCanhao, 2*this.raioCanhao, 2*this.raioCanhao);
+          }
+          else{
+            ctx.drawImage(canhao, 0, 0, 128, 128,
+              -this.raioCanhao, -this.raioCanhao, 2*this.raioCanhao, 2*this.raioCanhao);
+          }
+        }
+        this.danificado -= dt;
+    }
+    ctx.restore();
 }
 
 Sprite.prototype.restricoes = function(){
