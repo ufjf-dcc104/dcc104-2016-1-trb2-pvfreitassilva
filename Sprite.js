@@ -11,6 +11,7 @@ function Sprite(){
   this.animaExplosao = tempoExplosao;
   this.colExplosao = 0;
   this.linExplosao = 0;
+  this.iniciando = true;
 }
 
 Sprite.prototype.restaurar = function(){
@@ -23,6 +24,8 @@ Sprite.prototype.restaurar = function(){
 }
 
 Sprite.prototype.atirar = function(deInimigo){
+      
+  if(this.saude>0 && pc.vidas>0){
       var tiro = new Sprite();
 
       tiro.restricoes = function () {};
@@ -65,6 +68,7 @@ Sprite.prototype.atirar = function(deInimigo){
       tiros.push(tiro);
       audioLib.play("tiro", 25);
     }
+}
 
 Sprite.prototype.mover = function (){
   this.vx = this.vx + this.ax*dt - 0.07*this.vx;;
@@ -159,7 +163,15 @@ Sprite.prototype.desenhar = function (){
 }
 
 Sprite.prototype.restricoes = function(){
-  if(this.x<15){
+  
+  if(this.x < 400 && this.iniciando){
+    this.vx = 300;
+  } else{
+    this.iniciando=false;
+  }
+
+
+  if(this.x<15 && !this.iniciando){
     this.x = 15;
     this.vx = 0;
     this.ax = 0;

@@ -11,7 +11,11 @@
 		<script src="AudioResources.js"></script>
 		<script src="Constantes.js"></script>
 		<script src="Sprite.js"></script>
-		
+		<script src="Cenario.js"></script>
+		<script src="Inimigos.js"></script>
+		<script src="Mouse.js"></script>
+		<script src="Teclado.js"></script>
+		<script src="Informacoes.js"></script>
 	</head>
 	<body>
 	<canvas>
@@ -21,13 +25,13 @@
 	<script>
 		var canvas = document.getElementsByTagName("canvas")[0];
 		var ctx = canvas.getContext("2d");
-		canvas.width = window.innerWidth-40;
-		canvas.height = window.innerHeight-50;
+		canvas.width = 800;//window.innerWidth-40;
+		canvas.height = 600;//window.innerHeight-50;
 		
-		var mousePos= {x: 0,y: 0};
-
 		var excluirTiros = [];
 		var excluirInimigos = [];
+		var inimigos = [];
+		var tiros = [];
 				
 		var pc = new Sprite();
 		pc.danificado = 0;
@@ -36,94 +40,10 @@
 		pc.raioCanhao = pcraiocanhao;
 		pc.animacaoCanhao = 0;
 		pc.animarCanhao = false;
-		pc.y = canvas.height/2 - pc.raio;
+		pc.y = canvas.height/2;
+		pc.x = -100;
 		pc.img = carro;
-
-		var imgTiros = new Image();
-		imgTiros.src = "img/tiro.png";
-
-		var chao = new Image();
-		chao.src = "img/chao.jpg";
-
-		var inimigos = [];
-
-		function criaInimigo(){
-			var inimigo = new Sprite();
-			inimigo.danificado = 0;
-			inimigo.col = 0;
-			inimigo.raio = inraio;
-			inimigo.raioCanhao = inraiocanhao;
-			inimigo.animacaoCanhao = 0;
-			inimigo.animarCanhao = false;
-			inimigo.y = Math.random()*(canvas.height - 400) + 200 - inimigo.raio; //canvas.height/2;
-			inimigo.x = xInicial;
-			inimigo.tempoDisparo = 0;
-			inimigo.proximoDispado = Math.random()*tempoMinProxDisparo + tempoMinProxDisparo;
-			inimigo.img = inimigoImg;
-
-			inimigo.restricoes = function(){
-
-				//parada do inimigo
-				if(this.saude <=0){
-					this.ax = -2000;
-				}
-				else if(this.x < 0){
-					this.vx = 300;
-				}
-				else{
-					this.ax = 0;
-					this.tempoDisparo+=1000*dt;
-					if(this.tempoDisparo > this.proximoDispado){
-						console.log("Atirando com "+this.tempoDisparo+"ms");
-						this.tempoDisparo=0;
-						this.proximoDispado = Math.random()*tempoMinProxDisparo + tempoMinProxDisparo;
-						this.atirar(true);
-					}
-				}
-			}
-
-			inimigo.mover = function(){
-				this.vx = this.vx + this.ax*dt - 0.05*this.vx;;
-				this.x = this.x + this.vx*dt;
-				this.vy = this.vy + this.ay*dt - 0.05*this.vy;
-				this.y = this.y + this.vy*dt;
-
-				this.rotacao = Math.atan((this.y - pc.y)/(this.x - pc.x));
-					if(pc.x < this.x)
-				    	this.rotacao +=Math.PI;
-			}
-
-			return inimigo;
-		}
-
-		function insereInimigos(){
-			inimigos.push(criaInimigo());
-			inimigos.push(criaInimigo());
-			inimigos.push(criaInimigo());
-		}
-
-		var cenario = new Cenario();
-
-		function Cenario(){
-			this.passo = 0;
-		}
-
-		Cenario.prototype.desenhar = function(){
-			ctx.drawImage(chao, -this.passo, 0);
-			ctx.drawImage(chao, -this.passo+800, 0);
-			ctx.drawImage(chao, -this.passo+1600, 0);
-			this.passo += dt*800;
-			if(this.passo > 800)
-				this.passo = 0;
-		}
-
-		//var tiro = new Sprite();
-		//tiro.y =  -12000;
-		//tiro.raio = 10;
-		//tiro.col = 0;
-		//tiro.rotacao = 0;
-
-		var tiros = [];
+		pc.vidas = maxVidas;
 
 		function passo(){
 
@@ -145,6 +65,7 @@
 			for (var i in tiros) {
 				tiros[i].restricoes();
 			}
+
 			//Limpar a tela
  			ctx.clearRect(0,0, canvas.width, canvas.height);
 			
@@ -152,10 +73,16 @@
 			for (var i in tiros) {
 				tiros[i].desenhar();
 			}
-			pc.desenhar();
 
 			for (var i in inimigos) {
 				inimigos[i].desenhar();
+			}
+
+
+			desenhaInfos();
+
+			if(pc.saude>0 || pc.linExplosao<4){
+				pc.desenhar();
 			}
 
 			for(var i in tiros){
@@ -168,16 +95,15 @@
 					if(	inimigos[i].danificado <= 0
 						&& tiros[j].colidiuComCircular(inimigos[i])
 						&& !tiros[j].deInimigo){
-						//inimigos[i].y = 1200;
 						inimigos[i].danificado = tempoDanificado;
 						inimigos[i].saude-= tiros[j].forca;
 						excluirTiros.push(tiros[j]);
 					}
 				}
-				if(inimigos[i].saude <=0 && inimigos[i].x < 0)
+				if(inimigos[i].saude <=0 && inimigos[i].x < 0){
 					excluirInimigos.push(inimigos[i]);
-				//if(pc.danificado<=0 && pc.colidiuComCircular(inimigos[i])){
-					//pc.danificado = 2;	
+					inimigosDerrotados++;
+				}
 			}
 
 			for(var i in tiros){
@@ -189,23 +115,17 @@
 					excluirTiros.push(tiros[j]);
 				}
 			}
-			if(pc.saude <=0){
-				//TODO GAME OVER
-				pc.restaurar();
-			}
-			//if(pc.danificado<=0 && pc.colidiuComCircular(inimigos[i])){
-				//pc.danificado = 2;	
-			//	if(tiro.colidiuComCircular(inimigos[i])){
-			//		inimigos[i].y = 1200;
-			//		excluir.push(inimigos[i]);
-			//		tiro.y = -1200;
-			//	}
-			//}
-			//for(var e in excluir){
-			//	inimigos.splice(inimigos.indexOf(excluir[e]),1);
-			//}
-			//excluir = [];
 
+			if(pc.saude <=0){
+				if(pc.linExplosao >= 4){
+					pc.vidas--;
+					if(pc.vidas>0)
+						pc.restaurar();
+					else{
+						//TODO GAMEOVER
+					}
+				}
+			}
 
 			for(var i in excluirTiros){
 				tiros.splice(tiros.indexOf(excluirTiros[i]),1);
@@ -218,67 +138,6 @@
 				console.log("Inimigo excluido");
 			}
 			excluirInimigos = [];
-		}
-
-		function teclaPressionada(e){
-			//console.log("Tecla Pressionada: " + e.keyCode);
-			switch(e.keyCode){
-				case 65: //a
-					pc.ax = pcaxneg;
-				break;
-				case 68: //d
-					pc.ax = pcaxpos;
-				break;
-				case 87: //w
-					pc.ay = pcayneg;
-				break;
-				case 83: //s
-					pc.ay = pcaypos;
-				break;
-			}
-		}
-		function teclaSolta(e){
-			//console.log("Tecla Solta: " + e.keyCode);
-			switch(e.keyCode){
-				case 65:
-				case 68:
-					pc.ax = 0;
-					break;
-				case 87:
-				case 83:
-					pc.ay = 0;
-				break;
-			}
-		} 
-
-		function atualizaPosicaoMouse(e){
-			var obj = canvas;
-		    var top = 0;
-		    var left = 0;
-		    while (obj && obj.tagName != 'BODY') {
-                    top += obj.offsetTop;
-                    left += obj.offsetLeft;
-                    obj = obj.offsetParent;
-                }
-		  
-		    var mouseX = e.clientX - left + window.pageXOffset;
-		    var mouseY = e.clientY - top + window.pageYOffset;
-		    mousePos = {
-		        x: mouseX,
-		        y: mouseY
-		    };
-		}
-
-		function mousePressionado(e){
-			//console.log("Mouse pressionado");
-			//tiro.x = pc.x;
-			//tiro.y = pc.y;
-			//tiro.vy = 700*Math.sin(pc.rotacao);
-			//tiro.vx = 700*Math.cos(pc.rotacao);
-			//tiro.rotacao=pc.rotacao;
-			//pc.animarCanhao = true;
-			//pc.animacaoCanhao = 0;
-			pc.atirar(false);
 		}
 		
 		setInterval(passo, 1000/fps);

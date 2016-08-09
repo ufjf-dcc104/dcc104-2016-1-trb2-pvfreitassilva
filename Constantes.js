@@ -13,6 +13,7 @@ var pcayneg = -1000;
 var pcaypos = 1000;
 var pcraio = 60;
 var pcraiocanhao = 45;
+var maxVidas = 3;
 
 //CONSTANTES DE INIMIGOS
 var inraio = 60;
@@ -42,6 +43,12 @@ explosaoImg.id = "explosaoImg";
 var canhao = new Image();
 canhao.src = "img/canhao.png";
 canhao.id = "canhaoImg";
+
+var imgTiros = new Image();
+    imgTiros.src = "img/tiro.png";
+
+var chao = new Image();
+chao.src = "img/chao.jpg";
 
 //AUDIO
 audioLib = new AudioResources(5);
