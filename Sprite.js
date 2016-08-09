@@ -63,6 +63,7 @@ Sprite.prototype.atirar = function(deInimigo){
       this.animacaoCanhao = 0;
 
       tiros.push(tiro);
+      audioLib.play("tiro", 25);
     }
 
 Sprite.prototype.mover = function (){
@@ -89,6 +90,11 @@ Sprite.prototype.desenhar = function (){
       linha = 0;
 
     if(this.saude <= 0 && this.linExplosao < 4){
+
+      if(this.linExplosao==0 && this.colExplosao == 0){
+        audioLib.play("explosao", 500);
+      }
+
         ctx.drawImage(explosaoImg, Math.floor(this.colExplosao)*64, this.linExplosao*64, 64, 64,
         -this.raio, -this.raio, 2*this.raio, 2*this.raio);
 

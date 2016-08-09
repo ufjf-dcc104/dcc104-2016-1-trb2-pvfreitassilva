@@ -25,3 +25,26 @@ var largBarraSaude = 100;
 var altuBarraSaude = 5;
 var saudeMaxima = 100;
 var tempoExplosao = 2;
+
+//IMAGENS
+var carro = new Image();
+carro.src = "img/carro.png";
+carro.id = "carroImg";
+
+var inimigoImg = new Image();
+inimigoImg.src = "img/inimigo.png"
+inimigoImg.id = "inimigoImg";
+
+var explosaoImg = new Image();
+explosaoImg.src = "img/explosao.png";
+explosaoImg.id = "explosaoImg";
+
+var canhao = new Image();
+canhao.src = "img/canhao.png";
+canhao.id = "canhaoImg";
+
+//AUDIO
+audioLib = new AudioResources(5);
+audioLib.load("tiro", "snd/tiro.wav");          //http://opengameart.org/content/gunloop-8bit
+audioLib.load("explosao", "snd/explosao.wav");  //http://opengameart.org/content/explosion-0
+audioLib.load("motor", "snd/motor.wav");        //http://opengameart.org/content/car-engine-loop-96khz-4s

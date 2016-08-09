@@ -8,8 +8,10 @@
 				margin: 20px;
 			}
 		</style>
-		<script src="Sprite.js"></script>
+		<script src="AudioResources.js"></script>
 		<script src="Constantes.js"></script>
+		<script src="Sprite.js"></script>
+		
 	</head>
 	<body>
 	<canvas>
@@ -26,23 +28,7 @@
 
 		var excluirTiros = [];
 		var excluirInimigos = [];
-		
-		var carro = new Image();
-		carro.src = "img/carro.png";
-		carro.id = "carroImg";
-
-		var inimigoImg = new Image();
-		inimigoImg.src = "img/inimigo.png"
-		inimigoImg.id = "inimigoImg";
-
-		var explosaoImg = new Image();
-		explosaoImg.src = "img/explosao.png";
-		explosaoImg.id = "explosaoImg";
-		
-		var canhao = new Image();
-		canhao.src = "img/canhao.png";
-		canhao.id = "canhaoImg";
-		
+				
 		var pc = new Sprite();
 		pc.danificado = 0;
 		pc.col = 0;
@@ -301,7 +287,7 @@
 		addEventListener("mousemove", atualizaPosicaoMouse, false);
 		addEventListener("mousedown", mousePressionado, false);
 
-		
+		audioLib.playBackground("motor");
 
 	</script>
 	</body>
