@@ -27,8 +27,6 @@ function desenhaInfos(){
 		posVida++;
 	}
 
-
-
 	if(pc.vidas<=0){
 		ctx.font="60px Arial";
 		ctx.fillStyle = "red";
@@ -37,6 +35,4 @@ function desenhaInfos(){
 		ctx.lineWidth = 1;
 		ctx.strokeText("Game over!", canvas.width/2-200, canvas.height/2);
 	}
-
-
 }

@@ -5,6 +5,8 @@ var tempoDanificado = 1;
 var tempoMinProxDisparo = 1500;
 var intervaloFrames = 25;
 var tempoAnimacaoCanhao = 0.1;
+var velocidadeCenario = 600;
+var tempoMinProxPedra = 1500;
 
 //CONSTANTES DE PERSONAGEM
 var pcaxneg = -1000;
@@ -13,12 +15,18 @@ var pcayneg = -1000;
 var pcaypos = 1000;
 var pcraio = 60;
 var pcraiocanhao = 45;
+var pcxinicial = -100;
 var maxVidas = 3;
 
 //CONSTANTES DE INIMIGOS
 var inraio = 60;
 var inraiocanhao = 45;
 var xInicial = -500;
+
+//COSTANTES DE CENARIO
+var pedraXInicial = 2000;
+var pedraraio = 60;
+var danopedra = 10;
 
 //CONSTANTES GLOBAIS
 var fatorRotacaoY = 1000;
@@ -49,6 +57,9 @@ var imgTiros = new Image();
 
 var chao = new Image();
 chao.src = "img/chao.jpg";
+
+var pedraImg = new Image();
+pedraImg.src = "img/pedra.png";
 
 //AUDIO
 audioLib = new AudioResources(5);

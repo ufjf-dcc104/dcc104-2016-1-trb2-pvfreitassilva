@@ -16,6 +16,7 @@
 		<script src="Mouse.js"></script>
 		<script src="Teclado.js"></script>
 		<script src="Informacoes.js"></script>
+		<script src="Minimapa.js"></script>
 	</head>
 	<body>
 	<canvas>
@@ -41,7 +42,7 @@
 		pc.animacaoCanhao = 0;
 		pc.animarCanhao = false;
 		pc.y = canvas.height/2;
-		pc.x = -100;
+		pc.x = pcxinicial;
 		pc.img = carro;
 		pc.vidas = maxVidas;
 
@@ -58,6 +59,10 @@
 			for (var i in tiros) {
 				tiros[i].mover();
 			}
+			for(var i in cenario.pedras){
+				cenario.pedras[i].mover();
+			}
+
 			pc.restricoes();
 			for (var i in inimigos) {
 				inimigos[i].restricoes();
@@ -69,7 +74,11 @@
 			//Limpar a tela
  			ctx.clearRect(0,0, canvas.width, canvas.height);
 			
+			cenario.restricoes();
 			cenario.desenhar();
+			desenhaInfos();
+			desenhaMinimapa();
+
 			for (var i in tiros) {
 				tiros[i].desenhar();
 			}
@@ -77,9 +86,6 @@
 			for (var i in inimigos) {
 				inimigos[i].desenhar();
 			}
-
-
-			desenhaInfos();
 
 			if(pc.saude>0 || pc.linExplosao<4){
 				pc.desenhar();
@@ -113,6 +119,14 @@
 					pc.danificado = tempoDanificado;
 					pc.saude-= tiros[j].forca;
 					excluirTiros.push(tiros[j]);
+				}
+			}
+
+			for(var i in cenario.pedras){
+				if(	pc.danificado <= 0
+					&& pc.colidiuComCircular(cenario.pedras[i])){
+					pc.danificado = tempoDanificado;
+					pc.saude-= danopedra;
 				}
 			}
 
