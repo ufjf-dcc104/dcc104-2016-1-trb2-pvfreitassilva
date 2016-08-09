@@ -23,8 +23,6 @@ function desenhaMinimapa(){
 		ctx.fillRect(cenario.pedras[i].x,cenario.pedras[i].y,pedraraio,pedraraio);
 	}
 
-	ctx.drawImage(pc.img, 0, 0, 128, 128,
-        0, 0, 50, 50);
 	ctx.restore();
 
 }

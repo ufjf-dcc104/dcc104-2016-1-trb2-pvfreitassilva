@@ -10,12 +10,12 @@ function desenhaInfos(){
 	ctx.font="30px Arial";
 	ctx.fillStyle = "white";
 	ctx.strokeStyle = "black";
-	ctx.lineWidth = 1;
-	ctx.fillText(tempo, 20, 40);
+	ctx.lineWidth = 3;
 	ctx.strokeText(tempo, 20, 40);
-	ctx.fillText("Derrotados: "+inimigosDerrotados, 120, 40);
+	ctx.fillText(tempo, 20, 40);
 	ctx.strokeText("Derrotados: "+inimigosDerrotados, 120, 40);
-
+	ctx.fillText("Derrotados: "+inimigosDerrotados, 120, 40);
+	
 	var posVida = 0;
 
 	for(var i = 0; i<pc.vidas; i++){
