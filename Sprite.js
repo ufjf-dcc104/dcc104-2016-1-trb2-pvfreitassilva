@@ -28,7 +28,7 @@ Sprite.prototype.restaurar = function(){
 
 Sprite.prototype.atirar = function(deInimigo){
       
-  if(this.saude>0 && pc.vidas>0){
+  if(this.saude>0 && pc.vidas>0 && !pause){
       var tiro = new Sprite();
 
       tiro.restricoes = function () {};

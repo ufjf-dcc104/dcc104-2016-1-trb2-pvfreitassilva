@@ -99,7 +99,7 @@
 						if(	inimigos[i].danificado <= 0
 							&& tiros[j].colidiuComCircular(inimigos[i])
 							&& !tiros[j].deInimigo){
-							inimigos[i].danificado = tempoDanificado;
+							inimigos[i].danificado = tempoInimigoDanificado;
 							inimigos[i].saude-= tiros[j].forca;
 							excluirTiros.push(tiros[j]);
 						}
@@ -134,7 +134,13 @@
 						if(pc.vidas>0)
 							pc.restaurar();
 						else{
-							//TODO GAMEOVER
+							for(var i in inimigos){
+								inimigos[i].restricoes = function(){};
+								inimigos[i].vx = 800;
+							}
+							velocidadeCenario = 0;
+							cenario.restricoes = function(){};
+							//cenario.pedras = [];
 						}
 					}
 				}

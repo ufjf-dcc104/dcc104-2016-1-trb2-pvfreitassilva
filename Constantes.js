@@ -2,6 +2,7 @@
 var fps = 60;
 var dt = 1/fps;
 var tempoDanificado = 1;
+var tempoInimigoDanificado = 0.5;
 var tempoMinProxDisparo = 1500;
 var intervaloFrames = 25;
 var tempoAnimacaoCanhao = 0.1;
@@ -14,19 +15,19 @@ var pcaxneg = -1000;
 var pcaxpos = 1000;
 var pcayneg = -1000;
 var pcaypos = 1000;
-var pcraio = 60;
+var pcraio = 50;
 var pcraiocanhao = 45;
 var pcxinicial = -100;
 var maxVidas = 3;
 
 //CONSTANTES DE INIMIGOS
-var inraio = 60;
+var inraio = 50;
 var inraiocanhao = 45;
 var xInicial = -500;
 
 //COSTANTES DE CENARIO
 var pedraXInicial = 2000;
-var pedraraio = 60;
+var pedraraio = 50;
 var danopedra = 10;
 
 //CONSTANTES GLOBAIS
@@ -36,7 +37,7 @@ var altuBarraSaude = 5;
 var saudeMaxima = 100;
 var larguraCanvas = 1000;
 var alturaCanvas = 600;
-var raioTiro = 10;
+var raioTiro = 8;
 var velocidadeTiro = 700;
 var tracao = 0.07;
 var tracaoInimigo = 0.05;
@@ -73,3 +74,4 @@ audioLib.load("tiro", "snd/tiro.wav");          //http://opengameart.org/content
 audioLib.load("explosao", "snd/explosao.wav");  //http://opengameart.org/content/explosion-0
 audioLib.loadBackground("motor", "snd/motor.wav");        //http://opengameart.org/content/car-engine-loop-96khz-4s
 audioLib.loadBackground("background", "snd/background.wav"); //https://www.freesound.org/people/FoolBoyMedia/sounds/231254/
+//power up: https://www.freesound.org/people/GameAudio/sounds/220173/

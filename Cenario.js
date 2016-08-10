@@ -36,7 +36,7 @@ Pedra.prototype.desenhar = function(){
 }
 
 Pedra.prototype.mover = function(){
-	this.x = this.x + this.vx*dt;
+	this.x = this.x -velocidadeCenario*dt;
 }
 
 Cenario.prototype.desenhar = function(){
