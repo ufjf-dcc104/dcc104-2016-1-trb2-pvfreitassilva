@@ -7,6 +7,7 @@ var intervaloFrames = 25;
 var tempoAnimacaoCanhao = 0.1;
 var velocidadeCenario = 600;
 var tempoMinProxPedra = 1500;
+var tempoExplosao = 2;
 
 //CONSTANTES DE PERSONAGEM
 var pcaxneg = -1000;
@@ -33,7 +34,12 @@ var fatorRotacaoY = 1000;
 var largBarraSaude = 100;
 var altuBarraSaude = 5;
 var saudeMaxima = 100;
-var tempoExplosao = 2;
+var larguraCanvas = 800;
+var alturaCanvas = 600;
+var raioTiro = 10;
+var velocidadeTiro = 700;
+var tracao = 0.07;
+var tracaoInimigo = 0.05;
 
 //IMAGENS
 var carro = new Image();
@@ -45,7 +51,7 @@ inimigoImg.src = "img/inimigo.png"
 inimigoImg.id = "inimigoImg";
 
 var explosaoImg = new Image();
-explosaoImg.src = "img/explosao.png";
+explosaoImg.src = "img/explosao.png"; //http://opengameart.org/content/explosion
 explosaoImg.id = "explosaoImg";
 
 var canhao = new Image();
@@ -56,10 +62,10 @@ var imgTiros = new Image();
     imgTiros.src = "img/tiro.png";
 
 var chao = new Image();
-chao.src = "img/chao.jpg";
+chao.src = "img/chao.jpg"; //http://2.bp.blogspot.com/-UTV6xMDLlzk/TtENL3YbYZI/AAAAAAAAAFE/wzG3veFt2EI/s1600/Dirt+cracked+00+seamless.jpg
 
 var pedraImg = new Image();
-pedraImg.src = "img/pedra.png";
+pedraImg.src = "img/pedra.png"; //https://s-media-cache-ak0.pinimg.com/236x/91/05/af/9105af1e9bab92e1c176553e8a65f767.jpg
 
 //AUDIO
 audioLib = new AudioResources(5);

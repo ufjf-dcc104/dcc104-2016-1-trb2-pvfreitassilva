@@ -8,16 +8,19 @@ function Sprite(){
   this.ay = 0;
   this.rotacao = 0;
   this.saude = saudeMaxima;
-  this.animaExplosao = tempoExplosao;
   this.colExplosao = 0;
   this.linExplosao = 0;
   this.iniciando = true;
+  this.col = 0;
+  this.danificado=0;
+  this.raioCanhao = pcraiocanhao;
+  this.animacaoCanhao = 0;
+  this.animarCanhao = false;
 }
 
 Sprite.prototype.restaurar = function(){
   if(this.linExplosao >= 4){
     this.saude = saudeMaxima;
-    this.animaExplosao = tempoExplosao;
     this.colExplosao = 0;
     this.linExplosao = 0;
   }
@@ -53,12 +56,12 @@ Sprite.prototype.atirar = function(deInimigo){
         return false;
       }
 
-      tiro.raio = 10;
+      tiro.raio = raioTiro;
       tiro.col = 0;
       tiro.x = this.x;
       tiro.y = this.y;
-      tiro.vy = 700*Math.sin(this.rotacao);
-      tiro.vx = 700*Math.cos(this.rotacao);
+      tiro.vy = velocidadeTiro*Math.sin(this.rotacao);
+      tiro.vx = velocidadeTiro*Math.cos(this.rotacao);
       tiro.rotacao=this.rotacao;
       tiro.deInimigo = deInimigo;
       tiro.forca = 10;
@@ -71,9 +74,9 @@ Sprite.prototype.atirar = function(deInimigo){
 }
 
 Sprite.prototype.mover = function (){
-  this.vx = this.vx + this.ax*dt - 0.07*this.vx;;
+  this.vx = this.vx + this.ax*dt - tracao*this.vx;;
   this.x = this.x + this.vx*dt;
-  this.vy = this.vy + this.ay*dt - 0.07*this.vy;
+  this.vy = this.vy + this.ay*dt - tracao*this.vy;
   this.y = this.y + this.vy*dt;
 
   this.rotacao = Math.atan((this.y - mousePos.y)/(this.x - mousePos.x));

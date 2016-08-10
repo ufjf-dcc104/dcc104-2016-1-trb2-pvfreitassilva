@@ -1,11 +1,6 @@
 function criaInimigo(){
 			var inimigo = new Sprite();
-			inimigo.danificado = 0;
-			inimigo.col = 0;
 			inimigo.raio = inraio;
-			inimigo.raioCanhao = inraiocanhao;
-			inimigo.animacaoCanhao = 0;
-			inimigo.animarCanhao = false;
 			inimigo.y = Math.random()*(canvas.height - 400) + 200 - inimigo.raio; //canvas.height/2;
 			inimigo.x = xInicial;
 			inimigo.tempoDisparo = 0;
@@ -34,9 +29,9 @@ function criaInimigo(){
 			}
 
 			inimigo.mover = function(){
-				this.vx = this.vx + this.ax*dt - 0.05*this.vx;;
+				this.vx = this.vx + this.ax*dt - tracaoInimigo*this.vx;;
 				this.x = this.x + this.vx*dt;
-				this.vy = this.vy + this.ay*dt - 0.05*this.vy;
+				this.vy = this.vy + this.ay*dt - tracaoInimigo*this.vy;
 				this.y = this.y + this.vy*dt;
 
 				this.rotacao = Math.atan((this.y - pc.y)/(this.x - pc.x));

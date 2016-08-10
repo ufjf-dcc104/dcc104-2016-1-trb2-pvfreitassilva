@@ -26,8 +26,8 @@
 	<script>
 		var canvas = document.getElementsByTagName("canvas")[0];
 		var ctx = canvas.getContext("2d");
-		canvas.width = 800;//window.innerWidth-40;
-		canvas.height = 600;//window.innerHeight-50;
+		canvas.width = larguraCanvas;//window.innerWidth-40;
+		canvas.height = alturaCanvas;//window.innerHeight-50;
 		
 		var excluirTiros = [];
 		var excluirInimigos = [];
@@ -35,12 +35,7 @@
 		var tiros = [];
 				
 		var pc = new Sprite();
-		pc.danificado = 0;
-		pc.col = 0;
 		pc.raio = pcraio;
-		pc.raioCanhao = pcraiocanhao;
-		pc.animacaoCanhao = 0;
-		pc.animarCanhao = false;
 		pc.y = canvas.height/2;
 		pc.x = pcxinicial;
 		pc.img = carro;
