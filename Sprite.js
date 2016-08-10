@@ -116,7 +116,7 @@ Sprite.prototype.desenhar = function (){
     else{
 
       if((this.danificado*20%2>=0 && this.danificado*20%2 <= 1.0) || this.danificado<0)
-          ctx.drawImage(this.img, Math.floor(this.col)*128, linha*128, 128, 128,
+          ctx.drawImage(this.img, Math.floor(this.col)*128+5, linha*128+5, 123, 123,
             -this.raio, -this.raio, 2*this.raio, 2*this.raio);
 
         ctx.restore();
