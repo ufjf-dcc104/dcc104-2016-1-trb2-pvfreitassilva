@@ -41,112 +41,124 @@
 		pc.img = carro;
 		pc.vidas = maxVidas;
 
+		var pause = false;
+
 		function passo(){
 
-			if(inimigos.length == 0){
-				insereInimigos();
-			}
+			if(!pause){
+				if(inimigos.length == 0){
+					insereInimigos();
+				}
 
-			pc.mover();
-			for (var i in inimigos) {
-				inimigos[i].mover();
-			}
-			for (var i in tiros) {
-				tiros[i].mover();
-			}
-			for(var i in cenario.pedras){
-				cenario.pedras[i].mover();
-			}
+				pc.mover();
+				for (var i in inimigos) {
+					inimigos[i].mover();
+				}
+				for (var i in tiros) {
+					tiros[i].mover();
+				}
+				for(var i in cenario.pedras){
+					cenario.pedras[i].mover();
+				}
 
-			pc.restricoes();
-			for (var i in inimigos) {
-				inimigos[i].restricoes();
-			}
-			for (var i in tiros) {
-				tiros[i].restricoes();
-			}
+				pc.restricoes();
+				for (var i in inimigos) {
+					inimigos[i].restricoes();
+				}
+				for (var i in tiros) {
+					tiros[i].restricoes();
+				}
 
-			//Limpar a tela
- 			ctx.clearRect(0,0, canvas.width, canvas.height);
-			
-			cenario.restricoes();
-			cenario.desenhar();
-			desenhaInfos();
-			desenhaMinimapa();
+				//Limpar a tela
+	 			ctx.clearRect(0,0, canvas.width, canvas.height);
+				
+				cenario.restricoes();
+				cenario.desenhar();
+				desenhaInfos();
+				desenhaMinimapa();
 
-			for (var i in tiros) {
-				tiros[i].desenhar();
-			}
+				for (var i in tiros) {
+					tiros[i].desenhar();
+				}
 
-			for (var i in inimigos) {
-				inimigos[i].desenhar();
-			}
+				for (var i in inimigos) {
+					inimigos[i].desenhar();
+				}
 
-			if(pc.saude>0 || pc.linExplosao<4){
-				pc.desenhar();
-			}
+				if(pc.saude>0 || pc.linExplosao<4){
+					pc.desenhar();
+				}
 
-			for(var i in tiros){
-				if(tiros[i].foraDaTela())
-					excluirTiros.push(tiros[i])
-			}
-			
-			for (var i in inimigos) {
-				for(var j in tiros){
-					if(	inimigos[i].danificado <= 0
-						&& tiros[j].colidiuComCircular(inimigos[i])
-						&& !tiros[j].deInimigo){
-						inimigos[i].danificado = tempoDanificado;
-						inimigos[i].saude-= tiros[j].forca;
+				for(var i in tiros){
+					if(tiros[i].foraDaTela())
+						excluirTiros.push(tiros[i])
+				}
+				
+				for (var i in inimigos) {
+					for(var j in tiros){
+						if(	inimigos[i].danificado <= 0
+							&& tiros[j].colidiuComCircular(inimigos[i])
+							&& !tiros[j].deInimigo){
+							inimigos[i].danificado = tempoDanificado;
+							inimigos[i].saude-= tiros[j].forca;
+							excluirTiros.push(tiros[j]);
+						}
+					}
+					if(inimigos[i].saude <=0 && inimigos[i].x < 0){
+						excluirInimigos.push(inimigos[i]);
+						inimigosDerrotados++;
+					}
+				}
+
+				for(var i in tiros){
+					if(	pc.danificado <= 0
+						&& tiros[i].colidiuComCircular(pc)
+						&& tiros[i].deInimigo){
+						pc.danificado = tempoDanificado;
+						pc.saude-= tiros[j].forca;
 						excluirTiros.push(tiros[j]);
 					}
 				}
-				if(inimigos[i].saude <=0 && inimigos[i].x < 0){
-					excluirInimigos.push(inimigos[i]);
-					inimigosDerrotados++;
-				}
-			}
 
-			for(var i in tiros){
-				if(	pc.danificado <= 0
-					&& tiros[i].colidiuComCircular(pc)
-					&& tiros[i].deInimigo){
-					pc.danificado = tempoDanificado;
-					pc.saude-= tiros[j].forca;
-					excluirTiros.push(tiros[j]);
-				}
-			}
-
-			for(var i in cenario.pedras){
-				if(	pc.danificado <= 0
-					&& pc.colidiuComCircular(cenario.pedras[i])){
-					pc.danificado = tempoDanificado;
-					pc.saude-= danopedra;
-				}
-			}
-
-			if(pc.saude <=0){
-				if(pc.linExplosao >= 4){
-					pc.vidas--;
-					if(pc.vidas>0)
-						pc.restaurar();
-					else{
-						//TODO GAMEOVER
+				for(var i in cenario.pedras){
+					if(	pc.danificado <= 0
+						&& pc.colidiuComCircular(cenario.pedras[i])){
+						pc.danificado = tempoDanificado;
+						pc.saude-= danopedra;
 					}
 				}
-			}
 
-			for(var i in excluirTiros){
-				tiros.splice(tiros.indexOf(excluirTiros[i]),1);
-				console.log("Tiro excluido");
-			}
-			excluirTiros = [];
+				if(pc.saude <=0){
+					if(pc.linExplosao >= 4){
+						pc.vidas--;
+						if(pc.vidas>0)
+							pc.restaurar();
+						else{
+							//TODO GAMEOVER
+						}
+					}
+				}
 
-			for(var i in excluirInimigos){
-				inimigos.splice(inimigos.indexOf(excluirInimigos[i]),1);
-				console.log("Inimigo excluido");
+				for(var i in excluirTiros){
+					tiros.splice(tiros.indexOf(excluirTiros[i]),1);
+					console.log("Tiro excluido");
+				}
+				excluirTiros = [];
+
+				for(var i in excluirInimigos){
+					inimigos.splice(inimigos.indexOf(excluirInimigos[i]),1);
+					console.log("Inimigo excluido");
+				}
+				excluirInimigos = [];
 			}
-			excluirInimigos = [];
+			else{
+				ctx.font="60px Arial";
+				ctx.fillStyle = "white";
+				ctx.fillText("Pause!", canvas.width/2-100, canvas.height/2);
+				ctx.strokeStyle = "black";
+				ctx.lineWidth = 1;
+				ctx.strokeText("Pause!", canvas.width/2-100, canvas.height/2);
+			}
 		}
 		
 		setInterval(passo, 1000/fps);

@@ -13,10 +13,13 @@ function teclaPressionada(e){
 		case 83: //s
 			pc.ay = pcaypos;
 		break;
+		case 27:
+			pause = !pause;
+		break;
 	}
 }
 function teclaSolta(e){
-	//console.log("Tecla Solta: " + e.keyCode);
+	console.log("Tecla Solta: " + e.keyCode);
 	switch(e.keyCode){
 		case 65:
 		case 68:

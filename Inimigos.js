@@ -1,8 +1,12 @@
-function criaInimigo(){
+function criaInimigo(regiao){
+
+			var tamanhoRegiaoY = (canvas.height-100)/3;
+			var regiaoY = tamanhoRegiaoY*regiao;
+
 			var inimigo = new Sprite();
 			inimigo.raio = inraio;
-			inimigo.y = Math.random()*(canvas.height - 400) + 200 - inimigo.raio; //canvas.height/2;
-			inimigo.x = xInicial;
+			inimigo.y = Math.random()*tamanhoRegiaoY + regiaoY + inraio;// - inraio + 200; //canvas.height/2;
+			inimigo.x = xInicial + Math.random()*100;
 			inimigo.tempoDisparo = 0;
 			inimigo.proximoDispado = Math.random()*tempoMinProxDisparo + tempoMinProxDisparo;
 			inimigo.img = inimigoImg;
@@ -43,7 +47,7 @@ function criaInimigo(){
 		}
 
 		function insereInimigos(){
-			inimigos.push(criaInimigo());
-			inimigos.push(criaInimigo());
-			inimigos.push(criaInimigo());
+			inimigos.push(criaInimigo(0));
+			inimigos.push(criaInimigo(1));
+			inimigos.push(criaInimigo(2));
 		}
