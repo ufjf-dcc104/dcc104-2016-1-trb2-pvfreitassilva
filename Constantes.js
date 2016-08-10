@@ -28,7 +28,7 @@ var xInicial = -500;
 //COSTANTES DE CENARIO
 var pedraXInicial = 2000;
 var pedraraio = 50;
-var danopedra = 10;
+var danopedra = 25;
 
 //CONSTANTES GLOBAIS
 var fatorRotacaoY = 1000;

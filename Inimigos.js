@@ -1,11 +1,11 @@
 function criaInimigo(regiao){
 
-			var tamanhoRegiaoY = (canvas.height-100)/3;
+			var tamanhoRegiaoY = (canvas.height-inraio)/3;
 			var regiaoY = tamanhoRegiaoY*regiao;
 
 			var inimigo = new Sprite();
 			inimigo.raio = inraio;
-			inimigo.y = Math.random()*tamanhoRegiaoY + regiaoY + inraio;// - inraio + 200; //canvas.height/2;
+			inimigo.y = Math.random()*(tamanhoRegiaoY-inraio*2) + inraio*2 + regiaoY;
 			inimigo.x = xInicial + Math.random()*150;
 			inimigo.tempoDisparo = 0;
 			inimigo.proximoDispado = Math.random()*tempoMinProxDisparo + tempoMinProxDisparo;

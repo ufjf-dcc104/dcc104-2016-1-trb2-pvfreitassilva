@@ -55,7 +55,7 @@ Cenario.prototype.desenhar = function(){
 }
 
 Cenario.prototype.criaPedra = function(){
-	var pedra = new Pedra(pedraXInicial, Math.random()*(canvas.height - 400) + 200 - pedraraio, pedraraio);
+	var pedra = new Pedra(pedraXInicial, Math.random()*(canvas.height - pedraraio*2) + pedraraio, pedraraio);
 	this.pedras.push(pedra);
 }
 
