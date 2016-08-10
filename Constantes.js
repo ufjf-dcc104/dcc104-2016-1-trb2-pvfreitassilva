@@ -34,7 +34,7 @@ var fatorRotacaoY = 1000;
 var largBarraSaude = 100;
 var altuBarraSaude = 5;
 var saudeMaxima = 100;
-var larguraCanvas = 800;
+var larguraCanvas = 1000;
 var alturaCanvas = 600;
 var raioTiro = 10;
 var velocidadeTiro = 700;
@@ -71,4 +71,5 @@ pedraImg.src = "img/pedra.png"; //https://s-media-cache-ak0.pinimg.com/236x/91/0
 audioLib = new AudioResources(5);
 audioLib.load("tiro", "snd/tiro.wav");          //http://opengameart.org/content/gunloop-8bit
 audioLib.load("explosao", "snd/explosao.wav");  //http://opengameart.org/content/explosion-0
-audioLib.load("motor", "snd/motor.wav");        //http://opengameart.org/content/car-engine-loop-96khz-4s
+audioLib.loadBackground("motor", "snd/motor.wav");        //http://opengameart.org/content/car-engine-loop-96khz-4s
+audioLib.loadBackground("background", "snd/background.wav"); //https://www.freesound.org/people/FoolBoyMedia/sounds/231254/

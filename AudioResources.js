@@ -3,7 +3,7 @@ function AudioResources (numcanais){
   this.sons = {};
   this.canais = [];
   this.ativos = {};
-  this.background = new Audio();
+  this.sonsBackground = {};
   for (var i = 0; i < this.numcanais; i++) {
     this.canais[i] = {
       "audio": new Audio(),
@@ -14,6 +14,11 @@ function AudioResources (numcanais){
   this.load = function(key, src){
     this.sons[key] = new Audio(src);
     this.sons[key].load();
+  }
+
+  this.loadBackground = function(key, src){
+    this.sonsBackground[key] = new Audio(src);
+    this.sonsBackground[key].load();
   }
 
   this.play = function (key, duration) {
@@ -40,11 +45,24 @@ function AudioResources (numcanais){
 
     }
 
-    this.playBackground = function (key) {
+    this.playBackground = function () {
 
-      this.background.src = this.sons[key].src;
-      this.background.loop = true;
-      this.background.play();
+      for(var i in this.sonsBackground){
+          this.sonsBackground[i].loop=true;
+          this.sonsBackground[i].play();
+      }
+
+      //this.background.src = this.sons[key].src;
+      //this.background.loop = true;
+      //this.background.play();
+
+    }
+
+    this.pauseBackground = function (key) {
+
+      for(var i in this.sonsBackground){
+          this.sonsBackground[i].pause();
+      }
 
     }
 

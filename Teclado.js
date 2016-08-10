@@ -14,7 +14,7 @@ function teclaPressionada(e){
 			pc.ay = pcaypos;
 		break;
 		case 27:
-			pause = !pause;
+			pausar();
 		break;
 	}
 }
